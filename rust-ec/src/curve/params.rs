@@ -5,6 +5,24 @@ use num_traits::{Num, One, Pow, Zero};
 pub const secp256k1_Gx_hex: &str = "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798";
 pub const secp256k1_Gy_hex: &str = "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8";
 
+pub const test_group_Gx_hex: &str = "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81799";
+pub const test_group_Gy_hex: &str = "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B9";
+
+pub fn test_gx() -> BigInt{
+    BigInt::from_str_radix(test_group_Gx_hex, 16).expect("Failed to construct BigInt from Hex")
+}
+
+pub fn test_gy() -> BigInt{
+    BigInt::from_str_radix(test_group_Gy_hex, 16).expect("Failed to construct BigInt from Hex")
+}
+
+pub fn test_g() -> Point{
+    Point{
+        x: Some(test_gx()),
+        y: Some(test_gy())
+    }
+}
+
 pub fn two() -> BigInt{
     BigInt::from(2u8)
 }

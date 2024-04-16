@@ -9,6 +9,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f1fdabc7756949593fe60f30ec81974b613357de856987752631dea1e3394c80"
 
 [[package]]
+name = "compiler"
+version = "0.1.0"
+
+[[package]]
+name = "executor"
+version = "0.1.0"
+dependencies = [
+ "num-bigint",
+ "num-traits",
+ "rust-ec",
+]
+
+[[package]]
 name = "num-bigint"
 version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -38,7 +51,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-ecdsa"
+name = "rust-ec"
 version = "0.1.0"
 dependencies = [
  "num-bigint",

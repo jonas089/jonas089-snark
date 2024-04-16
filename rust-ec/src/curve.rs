@@ -5,14 +5,14 @@ pub mod params;
 use params::{two, three};
 
 mod math;
-use math::modulo;
+pub use math::modulo;
 
 #[derive(Clone, Debug)]
 pub struct Point{
-    x: Option<BigInt>,
-    y: Option<BigInt>
+    pub x: Option<BigInt>,
+    pub y: Option<BigInt>
 }
-
+#[derive(Clone, Debug)]
 pub struct Curve{
     pub a: BigInt,
     pub b: BigInt,
@@ -44,7 +44,7 @@ impl Curve{
             m = modulo(&(modulo(&(three*&x1*&x1+&self.a),&self.p) * (modulo(&(&two*&y1),&self.p)).modpow(&(&self.p-&two), &self.p)),&self.p)
         }
         else{
-            m = ((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p).modpow(&(&self.p-&two), &self.p))%&self.p //modular_inverse(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p)), &self.p);
+            m = modulo(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p).modpow(&(&self.p-&two), &self.p)),&self.p) //modular_inverse(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p)), &self.p);
         };
         let x3: BigInt = modulo(&(&m*&m - &x1 - &x2), &self.p);
         let y3: BigInt = modulo(&(&m*(&x1-&x3) - &y1), &self.p);
@@ -54,9 +54,9 @@ impl Curve{
         }
     }
 
-    pub fn double_and_add(self, n: BigInt, P: Point) -> Point{
+    pub fn double_and_add(&self, n: &BigInt, P: &Point) -> Point{
         if (P.x.is_none()) && (P.y.is_none()){
-            return P
+            return P.to_owned()
         };
         let mut temp_point = Point{
             x: P.x.clone(),
@@ -82,7 +82,7 @@ fn curve_operations(){
         b: secp256k1_b(),
         p: secp256k1_p()
     };
-    let point_g_2: Point = curve.double_and_add(BigInt::from(2u8), secp256k1_g());
+    let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp256k1_g());
     // Todo: make this an assertion and expand on the tests
     println!("Point G2: {:?}", &point_g_2);
 }

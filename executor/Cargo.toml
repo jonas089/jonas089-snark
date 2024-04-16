@@ -1,8 +1,9 @@
 [package]
-name = "rust-ecdsa"
+name = "executor"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rust-ec={path="../rust-ec"}
 num-bigint = "0.4"
 num-traits = "0.2"
