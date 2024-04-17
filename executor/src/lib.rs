@@ -38,6 +38,11 @@ fn addition_program(){
 }
 
 #[test]
+/* Pseudo Pairing
+    This test does not perform an actual bilinear pairing.
+    Therefore it is sadly not yet possible to obfuscate inputs in multiplication gates.
+    A real pairing algorithm and a pairing friendly curve must be used to achieve obfuscation.
+*/
 fn pseudo_multiplication_program(){
     let a = BigInt::from(2u8);
     let b = BigInt::from(3u8);
