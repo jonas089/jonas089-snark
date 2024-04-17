@@ -40,12 +40,14 @@ impl Curve{
         // calculate the gradient
         let mut m: BigInt = BigInt::zero();
         if (x1 == x2) && (y1 == y2){
-
+            // calculate the slope of the tangent line to find curve intersections
+            // division in modular arithmetic is equivalent to multiplying by the modular inverse
             m = modulo(&(modulo(&(three*&x1*&x1+&self.a),&self.p) * (modulo(&(&two*&y1),&self.p)).modpow(&(&self.p-&two), &self.p)),&self.p)
         }
         else{
             m = modulo(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p).modpow(&(&self.p-&two), &self.p)),&self.p) //modular_inverse(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p)), &self.p);
         };
+        // evaluate new point on the curve that intersects the tangent line
         let x3: BigInt = modulo(&(&m*&m - &x1 - &x2), &self.p);
         let y3: BigInt = modulo(&(&m*(&x1-&x3) - &y1), &self.p);
         Point { 
