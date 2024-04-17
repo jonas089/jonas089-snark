@@ -5,6 +5,18 @@ use rust_ec::curve::modulo;
 use params::{secp256k1_a, secp256k1_b, secp256k1_g, secp256k1_p, test_g};
 
 #[test]
+/* Additon obfuscation
+    a -> aG, 
+    b -> bG,
+    ...,
+    n -> nG
+
+    a + b = c,
+    aG + bG = cG
+
+    Verifier can compute cG and check if aG and bG provided by the prover equal cG.
+    If this is the case then the prover knows private values a, b such that a + b = c
+*/
 fn addition_program(){
     let g: Point = secp256k1_g();
     let a = BigInt::from(1u8);
