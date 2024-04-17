@@ -27,10 +27,7 @@ fn addition_program(){
 }
 
 #[test]
-fn multiplication_program(){
-    let G: Point = secp256k1_g();
-    let G2: Point = test_g();
-
+fn pseudo_multiplication_program(){
     let a = BigInt::from(2u8);
     let b = BigInt::from(3u8);
     let c = BigInt::from(6u8);
@@ -41,18 +38,21 @@ fn multiplication_program(){
         p: secp256k1_p()
     };
 
-    let aG = curve.double_and_add(&a, &G);
-    let bG2 = curve.double_and_add(&b, &G2);
-    let cG = curve.double_and_add(&c, &G);
-
-    let pairing_prover = pairing(&aG, &bG2, &curve);
-    let pairing_verifier = pairing(&cG, &G2, &curve);
+    let pairing_prover = pseudo_pairing(&a, &b, &curve);
+    let pairing_verifier = curve.double_and_add(&c, &secp256k1_g());
    
     println!("prover: {:?}, verifier: {:?}", &pairing_prover, &pairing_verifier);
-    fn pairing(a: &Point, b: &Point, curve: &Curve) -> Point{
-        let ax = a.x.clone().unwrap();
-        let bx = b.x.clone().unwrap();
-        let abx = modulo(&(ax*bx), &secp256k1_p());
-        curve.double_and_add(&abx, &secp256k1_g())
+    /// This is not a real pairing function and does not obfuscate a or b
+    /// aG -> double G a times
+    /// bG -> double G b times
+    /// cG -> double G c times
+    /// a * b = c
+    /// aG * bG != cG
+    /// aG * bG = (a+b)G
+    /// f(P, Q) = R
+
+    fn pseudo_pairing(a: &BigInt, b: &BigInt, curve: &Curve) -> Point{
+        let scalar = a * b;
+        curve.double_and_add(&scalar, &secp256k1_g())
     }
 }
