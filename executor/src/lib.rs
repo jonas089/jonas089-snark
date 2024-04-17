@@ -6,8 +6,7 @@ use params::{secp256k1_a, secp256k1_b, secp256k1_g, secp256k1_p, test_g};
 
 #[test]
 fn addition_program(){
-    let G: Point = secp256k1_g();
-
+    let g: Point = secp256k1_g();
     let a = BigInt::from(1u8);
     let b = BigInt::from(2u8);
     let c = BigInt::from(3u8);
@@ -18,12 +17,12 @@ fn addition_program(){
         p: secp256k1_p()
     };
 
-    let aG = curve.double_and_add(&a, &G);
-    let bG = curve.double_and_add(&b, &G);
-    let cG = curve.double_and_add(&c, &G);
+    let a_g = curve.double_and_add(&a, &g);
+    let b_g = curve.double_and_add(&b, &g);
+    let c_g = curve.double_and_add(&c, &g);
 
-    let sum = curve.point_addition(&aG, &bG);
-    println!("cG: {:?}, aG + bG: {:?}", &cG, &sum);
+    let sum = curve.point_addition(&a_g, &b_g);
+    println!("cG: {:?}, aG + bG: {:?}", &c_g, &sum);
 }
 
 #[test]
