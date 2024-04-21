@@ -13,7 +13,7 @@ see tests in `lib.rs`:
         b: secp256k1_b(),
         p: secp256k1_p()
     };
-    let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp256k1_g());
+    let point_2g: Point = curve.double_and_add(&BigInt::from(2u8), &secp256k1_g());
     // Todo: make this an assertion and expand on the tests
-    println!("Point 2G: {:?}", &point_g_2);
+    println!("Point 2G: {:?}", &point_2g);
 ```
