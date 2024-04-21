@@ -1,9 +1,11 @@
-# Jonas Snarks
-Jsnark is a passion project of mine that strives to be a minimum viable SNARK proving system for simple arithmetic circuits, implemented entirely in Rust and from scratch.
+# Arithmetic proofs from scratch
+Jsnark is a passion project of @jonas089 that strives to be a minimum viable SNARK proving system for simple arithmetic circuits, implemented entirely in Rust and from scratch.
 
-Currently the goal is to be able to prove addition and multiplication circuits to later be able to generate proofs of computation for any arithmetic circuit.
+If you wish to contribute or help me implement bilinear pairings feel free to reach out via [LinkedIn](https://www.linkedin.com/in/jonas-pauli/) or raise an issue directly here on this git repository. Any help is welcome :).
 
-An addition program was already implemented using `secp-256k1`, multiplication however requires bilinear pairings and a pairing friendly curve.
+Currently the goal is to be able to prove addition and multiplication circuits to then later be able to generate proofs of computation for simple arithmetic circuits with only multiplication and addition gates.
+
+I already implemented a basic addition program on top of the my custom `curve` library using the `secp-256k1` curve, multiplication however requires bilinear pairings and a pairing friendly curve which is yet to be done.
 
 # Example: Basic addition program over secp256k1
 
