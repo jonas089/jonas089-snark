@@ -1,5 +1,5 @@
 # Jonas Snarks
-Jsnark is a passion project of mine that strives to be a minimum viable snark proving system for simple arithmetic circuits.
+Jsnark is a passion project of mine that strives to be a minimum viable SNARK proving system for simple arithmetic circuits, implemented entirely in Rust and from scratch.
 
 Currently the goal is to be able to prove addition and multiplication circuits to later be able to generate proofs of computation for any arithmetic circuit.
 
