@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use num_bigint::BigInt;
 use num_traits::Zero;
 
@@ -77,14 +79,17 @@ impl Curve{
 
 
 #[test]
-fn curve_operations(){
-    use params::{secp256k1_a, secp256k1_b, secp256k1_p, secp256k1_g};
+fn verify_g2_secp256k1(){
+    use params::SECP_256_K1;
+    let secp = SECP_256_K1{};
     let curve: Curve = Curve{
-        a: secp256k1_a(),
-        b: secp256k1_b(),
-        p: secp256k1_p()
+        a: secp.a(),
+        b: secp.b(),
+        p: secp.p()
     };
-    let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp256k1_g());
+    let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp.g());
     // Todo: make this an assertion and expand on the tests
-    println!("Point G2: {:?}", &point_g_2);
+    println!("Point 2G: {:?}", &point_g_2);
+    assert_eq!(&point_g_2.x.expect("Missing x-coordinate"), &BigInt::from_str("89565891926547004231252920425935692360644145829622209833684329913297188986597").expect("Failed to construct BigInt from str"));
+    assert_eq!(&point_g_2.y.expect("Missing y-coordinate"), &BigInt::from_str("12158399299693830322967808612713398636155367887041628176798871954788371653930").expect("Failed to construct BigInt from str"));
 }

@@ -1,8 +1,8 @@
 use num_bigint::BigInt;
 
-use rust_ec::curve::{params,{Curve, Point}};
+use rust_ec::curve::{params::{self, two},Curve, Point};
 use rust_ec::curve::modulo;
-use params::{secp256k1_a, secp256k1_b, secp256k1_g, secp256k1_p, test_g};
+use params::SECP_256_K1;
 
 #[test]
 /* Additon obfuscation
@@ -18,15 +18,16 @@ use params::{secp256k1_a, secp256k1_b, secp256k1_g, secp256k1_p, test_g};
     If this is the case then the prover knows private values a, b such that a + b = c
 */
 fn addition_program(){
-    let g: Point = secp256k1_g();
+    let secp256k1 = SECP_256_K1{};
+    let g: Point = secp256k1.g();
     let a = BigInt::from(1u8);
     let b = BigInt::from(2u8);
     let c = BigInt::from(3u8);
 
     let curve = Curve{
-        a: secp256k1_a(),
-        b: secp256k1_b(),
-        p: secp256k1_p()
+        a: secp256k1.a(),
+        b: secp256k1.b(),
+        p: secp256k1.p()
     };
 
     let a_g = curve.double_and_add(&a, &g);
@@ -34,7 +35,8 @@ fn addition_program(){
     let c_g = curve.double_and_add(&c, &g);
 
     let sum = curve.point_addition(&a_g, &b_g);
-    println!("cG: {:?}, aG + bG: {:?}", &c_g, &sum);
+    assert_eq!(&c_g.x, &sum.x);
+    assert_eq!(&c_g.y, &sum.y);
 }
 
 #[test]
@@ -44,20 +46,23 @@ fn addition_program(){
     A real pairing algorithm and a pairing friendly curve must be used to achieve obfuscation.
 */
 fn pseudo_multiplication_program(){
+    let secp256k1 = SECP_256_K1{};
     let a = BigInt::from(2u8);
     let b = BigInt::from(3u8);
     let c = BigInt::from(6u8);
 
     let curve = Curve{
-        a: secp256k1_a(),
-        b: secp256k1_b(),
-        p: secp256k1_p()
+        a: secp256k1.a(),
+        b: secp256k1.b(),
+        p: secp256k1.p()
     };
 
-    let pairing_prover = pseudo_pairing(&a, &b, &curve);
-    let pairing_verifier = curve.double_and_add(&c, &secp256k1_g());
-   
+    let pairing_prover = pseudo_pairing(&a, &b, &secp256k1.g(), &curve);
+    let pairing_verifier = curve.double_and_add(&c, &secp256k1.g());
+
     println!("prover: {:?}, verifier: {:?}", &pairing_prover, &pairing_verifier);
+    assert_eq!(&pairing_prover.x, &pairing_verifier.x);
+    assert_eq!(&pairing_prover.y, &pairing_verifier.y);
     /// This is not a real pairing function and does not obfuscate a or b
     /// aG -> double G a times
     /// bG -> double G b times
@@ -67,8 +72,8 @@ fn pseudo_multiplication_program(){
     /// aG * bG = (a+b)G
     /// f(P, Q) = R
 
-    fn pseudo_pairing(a: &BigInt, b: &BigInt, curve: &Curve) -> Point{
+    fn pseudo_pairing(a: &BigInt, b: &BigInt, g: &Point, curve: &Curve) -> Point{
         let scalar = a * b;
-        curve.double_and_add(&scalar, &secp256k1_g())
+        curve.double_and_add(&scalar, g)
     }
 }
