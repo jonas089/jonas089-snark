@@ -42,37 +42,3 @@ impl SECP_256_K1{
         }
     }
 }
-
-// BLS12-381 - pairing friendly elliptic curve
-pub struct BLS_12_381{}
-impl BLS_12_381{
-    pub fn a(&self) -> BigInt{
-        BigInt::zero()
-    }
-    
-    pub fn b(&self) -> BigInt{
-        BigInt::from(4u8)
-    }
-
-    pub fn p(&self) -> BigInt{
-        BigInt::from_str_radix("TBD", 16).expect("Failed to construct BigInt from Hex")
-    }
-
-    // x-coordinate of the generator point 1G
-    pub fn gx(&self) -> BigInt{
-        BigInt::from_str_radix("TBD", 16).expect("Failed to construct BigInt from Hex")
-    }
-    
-    // y-coordinate of the generator point 1G
-    pub fn gy(&self) -> BigInt{
-        BigInt::from_str_radix("TBD", 16).expect("Failed to construct BigInt from Hex")
-    }
-
-    // Point form of the generator point 1G
-    pub fn g(&self) -> Point{
-        Point{
-            x: Some(self.gx()),
-            y: Some(self.gy())
-        }
-    }   
-}
