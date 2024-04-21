@@ -15,5 +15,5 @@ see tests in `lib.rs`:
     };
     let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp256k1_g());
     // Todo: make this an assertion and expand on the tests
-    println!("Point G2: {:?}", &point_g_2);
+    println!("Point 2G: {:?}", &point_g_2);
 ```
