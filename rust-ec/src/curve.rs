@@ -75,6 +75,17 @@ impl Curve{
         }
         temp_point
     }
+
+    pub fn is_on_curve(&self, P: &Point) -> bool{
+        // y^2 = x^3 + 7
+        let x_coordinate: BigInt = P.x.clone().expect("Missing x coordinate");
+        let y_coordinate: BigInt = P.y.clone().expect("Missing y coordinate");
+        let lhs: BigInt = modulo(&(&y_coordinate * &y_coordinate), &self.p);
+        let x_pow_2: BigInt = modulo(&(&self.a * modulo(&(&x_coordinate * &x_coordinate), &self.p)), &self.p);
+        let x_pow_3: BigInt = modulo(&(modulo(&(&x_coordinate * &x_coordinate), &self.p) * &x_coordinate), &self.p);
+        let rhs = modulo(&(modulo(&(x_pow_3 + x_pow_2), &self.p) + &self.b), &self.p);
+        lhs == rhs
+    }
 }
 
 
@@ -90,6 +101,7 @@ fn verify_g2_secp256k1(){
     let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp.g());
     // Todo: make this an assertion and expand on the tests
     println!("Point 2G: {:?}", &point_g_2);
-    assert_eq!(&point_g_2.x.expect("Missing x-coordinate"), &BigInt::from_str("89565891926547004231252920425935692360644145829622209833684329913297188986597").expect("Failed to construct BigInt from str"));
-    assert_eq!(&point_g_2.y.expect("Missing y-coordinate"), &BigInt::from_str("12158399299693830322967808612713398636155367887041628176798871954788371653930").expect("Failed to construct BigInt from str"));
+    assert_eq!(&point_g_2.x.clone().expect("Missing x-coordinate"), &BigInt::from_str("89565891926547004231252920425935692360644145829622209833684329913297188986597").expect("Failed to construct BigInt from str"));
+    assert_eq!(&point_g_2.y.clone().expect("Missing y-coordinate"), &BigInt::from_str("12158399299693830322967808612713398636155367887041628176798871954788371653930").expect("Failed to construct BigInt from str"));
+    assert!(curve.is_on_curve(&point_g_2));
 }
