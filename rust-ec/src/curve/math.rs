@@ -11,7 +11,7 @@ pub fn modulo(a: &BigInt, p: &BigInt) -> BigInt {
     }
 }
 
-/*/// Calculates the modular inverse of `a` modulo `p` using Fermat's Little Theorem
+/*// Calculates the modular inverse of `a` modulo `p` using Fermat's Little Theorem
 pub fn modular_inverse(a: &BigInt, p: &BigInt) -> BigInt {
     if a.is_zero() {
         // Typically there is no modular inverse for 0, handling this based on your application's needs
