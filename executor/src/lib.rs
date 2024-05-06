@@ -72,7 +72,6 @@ fn pseudo_multiplication_program(){
     /// a * b = c
     /// aG * bG != cG
     /// aG * bG = (a*b)G
-    /// aG + bG = cG = (a+b)G
 
     /// This is not a real pairing function and does not obfuscate a or b
     fn pseudo_pairing(a: &BigInt, b: &BigInt, g: &Point, curve: &Curve) -> Point{
