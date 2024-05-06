@@ -66,9 +66,9 @@ fn pseudo_multiplication_program(){
     println!("prover: {:?}, verifier: {:?}", &pairing_prover, &pairing_verifier);
     assert_eq!(&pairing_prover.x, &pairing_verifier.x);
     assert_eq!(&pairing_prover.y, &pairing_verifier.y);
-    /// aG -> double G a times
-    /// bG -> double G b times
-    /// cG -> double G c times
+    /// aG -> double_and_add(a, G)
+    /// bG 
+    /// cG 
     /// a * b = c
     /// aG * bG != cG
     /// aG * bG = (a*b)G
