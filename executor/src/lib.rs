@@ -66,15 +66,15 @@ fn pseudo_multiplication_program(){
     println!("prover: {:?}, verifier: {:?}", &pairing_prover, &pairing_verifier);
     assert_eq!(&pairing_prover.x, &pairing_verifier.x);
     assert_eq!(&pairing_prover.y, &pairing_verifier.y);
-    /// This is not a real pairing function and does not obfuscate a or b
     /// aG -> double G a times
     /// bG -> double G b times
     /// cG -> double G c times
     /// a * b = c
     /// aG * bG != cG
-    /// aG * bG = (a+b)G
-    /// f(P, Q) = R
+    /// aG * bG = (a*b)G
+    /// aG + bG = cG = (a+b)G
 
+    /// This is not a real pairing function and does not obfuscate a or b
     fn pseudo_pairing(a: &BigInt, b: &BigInt, g: &Point, curve: &Curve) -> Point{
         let scalar = a * b;
         curve.double_and_add(&scalar, g)
