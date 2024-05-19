@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use num_bigint::BigInt;
 use num_traits::Zero;
 
@@ -91,6 +89,7 @@ impl Curve{
 
 #[test]
 fn verify_g2_secp256k1(){
+    use std::str::FromStr;
     use params::SECP_256_K1;
     let secp = SECP_256_K1{};
     let curve: Curve = Curve{
