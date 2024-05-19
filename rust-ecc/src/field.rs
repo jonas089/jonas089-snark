@@ -148,3 +148,13 @@ impl FQP{
         self.degree = BigInt::from(self.modulus_coeffs.len());
     }
 }
+
+// References from py_ecc
+
+/*field_properties = {
+    "bn128": {
+        "field_modulus": 21888242871839275222246405745257275088696311157297823662689037894645226208583,  # noqa: E501
+        "fq2_modulus_coeffs": (1, 0),
+        "fq12_modulus_coeffs": (82, 0, 0, 0, 0, 0, -18, 0, 0, 0, 0, 0),  # Implied + [1]
+    },
+}*/
