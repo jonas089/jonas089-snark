@@ -7,6 +7,11 @@ Currently the goal is to be able to prove addition and multiplication circuits t
 
 I already implemented a basic addition program on top of the my custom `curve` library using the `secp-256k1` curve, multiplication however requires bilinear pairings and a pairing friendly curve which is yet to be done.
 
+# Running Tests
+```
+cargo test -p executor
+```
+
 # Example: Basic addition program over secp256k1
 
 ```rust
