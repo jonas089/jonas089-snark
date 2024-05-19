@@ -1,5 +1,7 @@
 use num_bigint::BigInt;
 use crate::math::{modulo, prime_field_inv};
+
+#[derive(Default)]
 pub struct FQ{
     pub n: BigInt,
     pub field_modulus: BigInt
@@ -100,9 +102,49 @@ impl FQ{
             }
         }
     }
+
+    pub fn eq(&self, other: FqElement) -> bool{
+        match other{
+            FqElement::FQ(other) => {
+                self.n == other.n
+            },
+            FqElement::BigInt(n) => {
+                self.n == n
+            }
+        }
+    }
 }
 
 enum FqElement{
     FQ(FQ),
     BigInt(BigInt)
+}
+
+/// Struct for multidimensional elliptic curve points
+#[derive(Default)]
+pub struct FQP{
+    degree: BigInt,
+    field_modulus: BigInt,
+    coeffs: Vec<FQ>,
+    modulus_coeffs: Vec<FqElement>
+}
+
+impl FQP{
+    pub fn new(&mut self, coeffs: Vec<FqElement>, modulus_coeffs: Vec<FqElement>){
+        if coeffs.len() != modulus_coeffs.len(){
+            panic!("coeffs and modulus_coeffs aren't of the same length");
+        };
+        // the corresponding fq class is differentiated only by its field modulus,
+        // therefore we construct a default instance and assign the field modulus when 
+        // instantiating an element
+        let mut corresponding_fq_class: FQ = FQ::default();
+        let mut fq_class_coeffs: Vec<FQ> = Vec::new();
+        // convert each coefficient to an FQ element
+        for c in coeffs{
+            fq_class_coeffs.push(corresponding_fq_class.new(c, self.field_modulus.clone()));
+        }
+        self.coeffs = fq_class_coeffs;
+        self.modulus_coeffs = modulus_coeffs;
+        self.degree = BigInt::from(self.modulus_coeffs.len());
+    }
 }
