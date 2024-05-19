@@ -1,5 +1,5 @@
-use num_traits::{Zero};
-use num_bigint::{BigInt, ToBigInt};
+use num_traits::Zero;
+use num_bigint::BigInt;
 
 // a modulo function that behaves similar to the Python % operator
 pub fn modulo(a: &BigInt, p: &BigInt) -> BigInt {

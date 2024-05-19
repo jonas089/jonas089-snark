@@ -20,6 +20,7 @@ pub struct Curve{
 }
 
 impl Curve{
+    #[allow(non_snake_case, unused_assignments)]
     pub fn point_addition(&self, P: &Point, Q: &Point) -> Point{
         let two = two();
         let three = three();
@@ -56,6 +57,7 @@ impl Curve{
         }
     }
 
+    #[allow(non_snake_case)]
     pub fn double_and_add(&self, n: &BigInt, P: &Point) -> Point{
         if (P.x.is_none()) && (P.y.is_none()){
             return P.to_owned()
@@ -74,6 +76,7 @@ impl Curve{
         temp_point
     }
 
+    #[allow(non_snake_case)]
     pub fn is_on_curve(&self, P: &Point) -> bool{
         // y^2 = x^3 + 7
         let x_coordinate: BigInt = P.x.clone().expect("Missing x coordinate");
@@ -90,8 +93,8 @@ impl Curve{
 #[test]
 fn verify_g2_secp256k1(){
     use std::str::FromStr;
-    use params::SECP_256_K1;
-    let secp = SECP_256_K1{};
+    use params::Secp256k1;
+    let secp = Secp256k1{};
     let curve: Curve = Curve{
         a: secp.a(),
         b: secp.b(),

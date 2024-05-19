@@ -1,8 +1,7 @@
 use crate::curve::Point;
 use num_bigint::BigInt;
-use num_traits::{Num, One, Pow, Zero};
+use num_traits::{Num, Zero};
 
-// constants
 pub fn two() -> BigInt{
     BigInt::from(2u8)
 }
@@ -11,9 +10,10 @@ pub fn three() -> BigInt{
     BigInt::from(3u8)
 }
 
-// Secp256k1 - Bitcoin curve, not pairing friendly
-pub struct SECP_256_K1{}
-impl SECP_256_K1{
+/// Secp256k1 - Bitcoin curve, not pairing friendly
+pub struct Secp256k1;
+
+impl Secp256k1{
     pub fn a(&self) -> BigInt{
         BigInt::zero()
     }
