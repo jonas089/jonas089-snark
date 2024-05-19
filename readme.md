@@ -1,4 +1,6 @@
 # Arithmetic proofs from scratch
+⚠️ This is not a production library ⚠️
+
 Jsnark is a passion project of @jonas089 that strives to be a minimum viable SNARK proving system for simple arithmetic circuits, implemented entirely in Rust and from scratch.
 
 If you wish to contribute or help me implement bilinear pairings feel free to reach out via [LinkedIn](https://www.linkedin.com/in/jonas-pauli/) or raise an issue directly here on this git repository. Any help is welcome :).
