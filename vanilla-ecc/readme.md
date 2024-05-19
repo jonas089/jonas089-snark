@@ -1,4 +1,4 @@
-# Rust-ec - elliptic curve operations in Rust
+# Vanilla-ecc
 
 This library exposes an api to construct elliptic curves such as secp256k1 and perform point doubling and point addition
 
