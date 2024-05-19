@@ -3,8 +3,8 @@ use std::str::FromStr;
 use num_bigint::BigInt;
 
 use num_traits::One;
-use rust_ec::curve::{params::{self, two},Curve, Point};
-use rust_ec::curve::modulo;
+use vanilla_ecc::curve::{params::{self, two},Curve, Point};
+use vanilla_ecc::curve::modulo;
 use params::SECP_256_K1;
 
 #[test]

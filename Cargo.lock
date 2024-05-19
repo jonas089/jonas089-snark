@@ -18,7 +18,7 @@ version = "0.1.0"
 dependencies = [
  "num-bigint",
  "num-traits",
- "rust-ec",
+ "vanilla_ecc",
 ]
 
 [[package]]
@@ -51,7 +51,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-ec"
+name = "rust-ecc"
 version = "0.1.0"
 dependencies = [
  "num-bigint",
@@ -59,7 +59,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-ecc"
+name = "vanilla_ecc"
 version = "0.1.0"
 dependencies = [
  "num-bigint",
