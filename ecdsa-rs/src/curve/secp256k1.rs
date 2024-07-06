@@ -20,22 +20,30 @@ pub fn p() -> BigInt {
         "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
         16,
     )
-    .expect("Failed to construct BigInt from Hex")
+    .expect("failed to construct bigInt from Hex")
+}
+
+pub fn n() -> BigInt {
+    BigInt::from_str_radix(
+        "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
+        16,
+    )
+    .expect("failed to construct bigInt from Hex")
 }
 
 pub fn gx() -> BigInt {
     BigInt::from_str_radix(
-        "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798",
+        "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
         16,
     )
-    .expect("Failed to construct BigInt from Hex")
+    .expect("failed to construct bigInt from Hex")
 }
 pub fn gy() -> BigInt {
     BigInt::from_str_radix(
-        "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8",
+        "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
         16,
     )
-    .expect("Failed to construct BigInt from Hex")
+    .expect("failed to construct bigInt from Hex")
 }
 pub fn g() -> Point {
     Point {

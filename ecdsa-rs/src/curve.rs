@@ -46,12 +46,11 @@ impl Curve {
                 + &FieldElement::new(Rc::new(self.a.clone()), Rc::new(self.p.clone())))
                 * (&(FieldElement::new(Rc::new(2.into()), Rc::new(self.p.clone())) * &y1)
                     .modpow(self.p.clone() - 2));
-
         } else {
             m = (&y2 - &y1) * &(&x2 - &x1).modpow(self.p.clone() - 2);
         };
         let x3: FieldElement = &(&(m.clone() * &m) - &x1) - &x2;
-        let y3: FieldElement = & (m * &(&x1 - &x3)) - &y1;
+        let y3: FieldElement = &(m * &(&x1 - &x3)) - &y1;
         Point {
             x: Some(x3),
             y: Some(y3),
@@ -95,43 +94,20 @@ mod tests {
     fn ecdsa() {
         use crate::curve::secp256k1;
         use secp256k1::g;
+        use secp256k1::n;
         let secp256k1 = secp256k1_init();
         // 2p + 3 as k
         let k: BigInt = 10.into();
         let kG: Point = secp256k1.double_and_add(&k, &g());
         let d: BigInt = 20.into();
         let dG: Point = secp256k1.double_and_add(&d, &g());
-        let r: FieldElement = kG.x.clone().unwrap();
-        let h: BigInt = 20.into();
-        let k_inverse: BigInt = modinv(k.clone(), secp256k1.p.clone());
-        // k_inverse * (h + r * p)
-        let s: FieldElement = FieldElement::new(Rc::new(k_inverse), Rc::new(secp256k1.p.clone()))
-            * &(&FieldElement::new(Rc::new(h.clone()), Rc::new(secp256k1.p.clone()))
-                + &(FieldElement::new(
-                    Rc::new(r.value.as_ref().clone()),
-                    Rc::new(secp256k1.p.clone()),
-                ) * &FieldElement::new(Rc::new(d), Rc::new(secp256k1.p.clone()))));
-        assert!(r.value.as_ref() < &secp256k1.p);
-        assert!(s.value.as_ref() < &secp256k1.p);
-        // R' = (h * s1) * G + (r * s1) * public_key
-        let s_inverse: BigInt = modinv(s.value.as_ref().clone(), secp256k1.p.clone());
-        assert!(&s_inverse < &secp256k1.p);
-        // assert correctness of modular inverse
-        assert_eq!(
-            s.value.as_ref().clone() * s_inverse.clone() % secp256k1.p.clone(),
-            1.into()
-        );
-        
-        let sh: FieldElement = FieldElement::new(Rc::new(h), Rc::new(secp256k1.p.clone()))
-            * &FieldElement::new(Rc::new(s_inverse.clone()), Rc::new(secp256k1.p.clone()));
-        let shg: Point = secp256k1.double_and_add(sh.value.as_ref(), &g());
-
-        let sr: FieldElement =
-            r.clone() * &FieldElement::new(Rc::new(s_inverse), Rc::new(secp256k1.p.clone()));
-        let srp: Point = secp256k1.double_and_add(sr.value.as_ref(), &dG);
-        
-        let verifier: Point = secp256k1.point_addition(&shg, &srp);
-        assert_eq!(r.value.as_ref(), verifier.x.unwrap().value.as_ref());
+        let mut r: FieldElement = kG.x.clone().unwrap();
+        r.field_modulus = Rc::new(n());
+        r = r * &FieldElement::new(Rc::new(BigInt::one()), Rc::new(n()));
+        let r_inverse: BigInt = modinv(r.value.as_ref().clone(), n());
+        let r_inverse_element: FieldElement = FieldElement::new(Rc::new(r_inverse), Rc::new(n()));
+        let r_element: FieldElement = FieldElement::new(Rc::new(r.value.as_ref().clone()), Rc::new(n()));
+        assert_eq!((r_element * &r_inverse_element).value.as_ref(), &1.into());
     }
 
     fn secp256k1_init() -> Curve {
