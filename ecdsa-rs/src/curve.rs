@@ -36,7 +36,7 @@ impl Curve {
         );
         let mut m: FieldElement = FieldElement {
             value: BigInt::zero(),
-            field_modulus: self.p.clone(),
+            field_modulus: Rc::new(self.p.clone()),
         };
 
         if (x1.value == x2.value) && (y1.value == y2.value) {
@@ -99,7 +99,7 @@ mod tests {
         let d: BigInt = 20.into();
         let dG: Point = secp256k1.double_and_add(&d, &g());
         let mut r: FieldElement = kG.x.clone().unwrap();
-        r.field_modulus = n();
+        r.field_modulus = Rc::new(n());
         r = r * &FieldElement::new(BigInt::one(), n());
         //let r_inverse: BigInt = modinv(r.value.as_ref().clone(), n());
         //let r_inverse_element: FieldElement = FieldElement::new(Rc::new(r_inverse), Rc::new(n()));

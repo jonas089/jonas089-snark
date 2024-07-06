@@ -49,11 +49,11 @@ pub fn g() -> Point {
     Point {
         x: Some(FieldElement {
             value: gx(),
-            field_modulus: p(),
+            field_modulus: Rc::new(p()),
         }),
         y: Some(FieldElement {
             value: gy(),
-            field_modulus: p(),
+            field_modulus: Rc::new(p()),
         }),
     }
 }
