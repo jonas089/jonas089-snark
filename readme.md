@@ -14,10 +14,10 @@ I already implemented a basic addition program on top of the my custom `curve` l
 cargo test -p executor
 ```
 
-# Vanilla-ecc vs Rust-ecc
-Rust-ecc is a refactor of Vanilla-ecc. Vanilla-ecc was designed with Curves in mind, whilst Rust-ecc was designed with Fields in mind. Therefore Rust-ecc is closer to what one would see in production (e.g. Ethereum's py-ecc).
+# Vanilla-ecc vs ecdsa-rs
+ecdsa-rs is a refactor of Vanilla-ecc. Vanilla-ecc was designed with Curves in mind, whilst ecdsa-rs was designed with Fields in mind. Therefore ecdsa-rs is closer to what one would see in production (e.g. Ethereum's py-ecc).
 
-For educational purposes it can make sense to review both, but Rust-ecc is probably easier to understand for most people. When I first learned about ECC I didn't know much about fields and therefore ended up implementing Vanilla-ecc.
+For educational purposes it can make sense to review both, but ecdsa-rs is probably easier to understand for most people. When I first learned about ECC I didn't know much about fields and therefore ended up implementing Vanilla-ecc.
 
 # Example: Basic addition program over secp256k1
 
@@ -52,9 +52,9 @@ In cases where either a or b are public inputs, they can be committed to some pu
 Modern SNARKs involve additional steps, but for my prototype this is a deemed a minimum viable means of proving addition.
 
 # Bilinear pairings
-I have started implementing `rust-ecc` which is largely inspired by the Ethereum Foundation's `py-ecc`. The crate `vanilla-ecc` was designed with curve-orientation, which turned out to not be suitable for the multidimensional elliptic curve operations that are required for bilinear pairings.
+I have started implementing `ecdsa-rs` which is largely inspired by the Ethereum Foundation's `py-ecc`. The crate `vanilla-ecc` was designed with curve-orientation, which turned out to not be suitable for the multidimensional elliptic curve operations that are required for bilinear pairings.
 
 `vanilla-ecc` can only be used to obfuscate inputs in addition circuits and for regular asymmetric key cryptography.
 
-`rust-ecc` will hopefully soon provide similar functionality to `py-ecc` with bilinear pairings and zk-friendly curves.
+`ecdsa-rs` will hopefully soon provide similar functionality to `py-ecc` with bilinear pairings and zk-friendly curves.
 
