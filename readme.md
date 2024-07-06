@@ -52,7 +52,7 @@ In cases where either a or b are public inputs, they can be committed to some pu
 Modern SNARKs involve additional steps, but for my prototype this is a deemed a minimum viable means of proving addition.
 
 # Bilinear pairings
-I have started implementing `ecdsa-rs` which is largely inspired by the Ethereum Foundation's `py-ecc`. The crate `vanilla-ecc` was designed with curve-orientation, which turned out to not be suitable for the multidimensional elliptic curve operations that are required for bilinear pairings.
+I have started implementing `rust-rs` which is largely inspired by the Ethereum Foundation's `rust-ecc`. The crate `vanilla-ecc` was designed with curve-orientation, which turned out to not be suitable for the multidimensional elliptic curve operations that are required for bilinear pairings.
 
 `vanilla-ecc` can only be used to obfuscate inputs in addition circuits and for regular asymmetric key cryptography.
 
