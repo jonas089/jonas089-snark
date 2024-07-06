@@ -48,6 +48,7 @@ impl Curve{
         else{
             m = modulo(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p).modpow(&(&self.p-&two), &self.p)),&self.p) //modular_inverse(&((&y2-&y1)%&self.p * ((&x2-&x1)%&self.p)), &self.p);
         };
+        println!("M: {:?}", &m);
         // evaluate new point on the curve that intersects the tangent line
         let x3: BigInt = modulo(&(&m*&m - &x1 - &x2), &self.p);
         let y3: BigInt = modulo(&(&m*(&x1-&x3) - &y1), &self.p);

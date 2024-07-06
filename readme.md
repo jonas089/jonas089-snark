@@ -14,6 +14,11 @@ I already implemented a basic addition program on top of the my custom `curve` l
 cargo test -p executor
 ```
 
+# Vanilla-ecc vs Rust-ecc
+Rust-ecc is a refactor of Vanilla-ecc. Vanilla-ecc was designed with Curves in mind, whilst Rust-ecc was designed with Fields in mind. Therefore Rust-ecc is closer to what one would see in production (e.g. Ethereum's py-ecc).
+
+For educational purposes it can make sense to review both, but Rust-ecc is probably easier to understand for most people. When I first learned about ECC I didn't know much about fields and therefore ended up implementing Vanilla-ecc.
+
 # Example: Basic addition program over secp256k1
 
 ```rust
