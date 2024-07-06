@@ -10,15 +10,15 @@ pub fn modulo(a: &BigInt, p: &BigInt) -> BigInt {
     }
 }
 
-pub fn prime_field_inv(mut a: BigInt, n: BigInt) -> BigInt{
+pub fn prime_field_inv(mut a: BigInt, n: BigInt) -> BigInt {
     // Extended euclidean algorithm to find modular inverses for integers
     a = modulo(&a, &n);
-    if a == BigInt::zero(){
+    if a == BigInt::zero() {
         return BigInt::zero();
     }
     let (mut lm, mut hm) = (BigInt::one(), BigInt::zero());
     let (mut low, mut high) = (modulo(&a, &n), n.clone());
-    while low > BigInt::one(){
+    while low > BigInt::one() {
         let r = &high / &low;
         let (nm, new) = (&hm - &lm * &r, high - &low * &r);
         hm = lm;

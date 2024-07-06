@@ -2,43 +2,55 @@ use crate::curve::Point;
 use num_bigint::BigInt;
 use num_traits::{Num, Zero};
 
-pub fn two() -> BigInt{
+pub fn two() -> BigInt {
     BigInt::from(2u8)
 }
 
-pub fn three() -> BigInt{
+pub fn three() -> BigInt {
     BigInt::from(3u8)
 }
 
 /// Secp256k1 - Bitcoin curve, not pairing friendly
 pub struct Secp256k1;
 
-impl Secp256k1{
-    pub fn a(&self) -> BigInt{
+impl Secp256k1 {
+    pub fn a(&self) -> BigInt {
         BigInt::zero()
     }
-    
-    pub fn b(&self) -> BigInt{
+
+    pub fn b(&self) -> BigInt {
         BigInt::from(7u8)
     }
-    
-    pub fn p(&self) -> BigInt{
-        BigInt::from_str_radix("fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f", 16).expect("Failed to construct BigInt from Hex")
+
+    pub fn p(&self) -> BigInt {
+        BigInt::from_str_radix(
+            "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
+            16,
+        )
+        .expect("Failed to construct BigInt from Hex")
     }
 
     // x-coordinate of the generator point 1G
-    pub fn gx(&self) -> BigInt{
-        BigInt::from_str_radix("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16).expect("Failed to construct BigInt from Hex")
+    pub fn gx(&self) -> BigInt {
+        BigInt::from_str_radix(
+            "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798",
+            16,
+        )
+        .expect("Failed to construct BigInt from Hex")
     }
     // y-coordinate of the generator point 1G
-    pub fn gy(&self) -> BigInt{
-        BigInt::from_str_radix("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16).expect("Failed to construct BigInt from Hex")
+    pub fn gy(&self) -> BigInt {
+        BigInt::from_str_radix(
+            "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8",
+            16,
+        )
+        .expect("Failed to construct BigInt from Hex")
     }
     // Point form of the generator point 1G
-    pub fn g(&self) -> Point{
-        Point{
+    pub fn g(&self) -> Point {
+        Point {
             x: Some(self.gx()),
-            y: Some(self.gy())
+            y: Some(self.gy()),
         }
     }
 }
