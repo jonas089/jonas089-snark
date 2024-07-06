@@ -127,7 +127,7 @@ mod tests {
         let shg: Point = secp256k1.double_and_add(&sh.value, &g());
 
         let sr: FieldElement = r_element.clone() * &s_inverse_element;
-        let srg: Point = secp256k1.double_and_add(&sr.value, &kG);
+        let srg: Point = secp256k1.double_and_add(&sr.value, &dG);
         let verifier: Point = secp256k1.point_addition(&shg, &srg);
         assert_eq!(verifier.x.unwrap().value, r.value);
     }
