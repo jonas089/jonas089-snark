@@ -6,4 +6,3 @@ edition = "2021"
 [dependencies]
 num-bigint = "0.4"
 num-traits = "0.2"
-num-bigint-dig = "0.8.4"

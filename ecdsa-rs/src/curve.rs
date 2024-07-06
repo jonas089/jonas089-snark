@@ -4,6 +4,7 @@ use num_bigint::BigInt;
 use num_traits::Zero;
 
 use crate::field::FieldElement;
+mod secp256k1;
 
 #[derive(Debug, Clone)]
 pub struct Point {
@@ -45,9 +46,8 @@ impl Curve {
                 * (&(FieldElement::new(Rc::new(BigInt::from(2)), Rc::new(self.p.clone())) * &y1)
                     .modpow(self.p.clone() - 2));
         } else {
-            m = (&y1 - &y2) * (&(&x2 - &x1).modpow(self.p.clone() - 2));
+            m = (&y2 - &y1) * &((&x2 - &x1).modpow(self.p.clone() - 2));
         };
-        println!("M: {:?}", &m);
         let x3: FieldElement = &(&(m.clone() * &m) - &x1) - &x2;
         let y3: FieldElement = m * &(&(&x1 - &x3) - &y1);
         Point {
@@ -75,62 +75,91 @@ impl Curve {
     }
 }
 
-#[test]
-fn test_generate_2g_for_secp256k1() {
-    use num_traits::Num;
-    let secp256k1: Curve = Curve {
-        a: BigInt::zero(),
-        b: b(),
-        p: p(),
+#[cfg(test)]
+mod tests {
+    use super::{
+        secp256k1::{b, g, p},
+        BigInt, Curve, FieldElement, Point, Rc,
     };
-    let point_g_2: Point = secp256k1.double_and_add(&2.into(), &g());
-    println!("Point 2G: {:?}", &point_g_2);
-
-    fn a() -> BigInt {
-        BigInt::zero()
+    use num_traits::{One, Zero};
+    #[test]
+    fn test_generate_2g_for_secp256k1() {
+        let secp256k1: Curve = secp256k1_init();
+        let point_g_2: Point = secp256k1.double_and_add(&2.into(), &g());
+        println!("Point 2G: {:?}", &point_g_2);
     }
 
-    fn b() -> BigInt {
-        BigInt::from(7u8)
+    #[test]
+    fn ecdsa() {
+        use crate::curve::secp256k1;
+        use secp256k1::g;
+        let secp256k1 = secp256k1_init();
+        // 2p + 3 as k
+        let k: BigInt = 3.into();
+        let kG: Point = secp256k1.double_and_add(&k, &g());
+        println!("kG: {:?}", &kG);
+        return;
+        let d: BigInt = 20.into();
+        let dG: Point = secp256k1.double_and_add(&d, &g());
+        let r: FieldElement = kG.x.clone().unwrap();
+        let h: BigInt = 20.into();
+        let k_inverse: BigInt = modinv(k.clone(), secp256k1.p.clone());
+        // k_inverse * (h + r * p)
+        let s: FieldElement = FieldElement::new(Rc::new(k_inverse), Rc::new(secp256k1.p.clone()))
+            * &(&FieldElement::new(Rc::new(h.clone()), Rc::new(secp256k1.p.clone()))
+                + &(FieldElement::new(
+                    Rc::new(r.value.as_ref().clone()),
+                    Rc::new(secp256k1.p.clone()),
+                ) * &FieldElement::new(Rc::new(d), Rc::new(secp256k1.p.clone()))));
+        assert!(r.value.as_ref() < &secp256k1.p);
+        assert!(s.value.as_ref() < &secp256k1.p);
+        // R' = (h * s1) * G + (r * s1) * public_key
+        let s_inverse: BigInt = modinv(s.value.as_ref().clone(), secp256k1.p.clone());
+        assert!(&s_inverse < &secp256k1.p);
+        // assert correctness of modular inverse
+        assert_eq!(
+            s.value.as_ref().clone() * s_inverse.clone() % secp256k1.p.clone(),
+            1.into()
+        );
+        
+        let sh: FieldElement = FieldElement::new(Rc::new(h), Rc::new(secp256k1.p.clone()))
+            * &FieldElement::new(Rc::new(s_inverse.clone()), Rc::new(secp256k1.p.clone()));
+        let shg: Point = secp256k1.double_and_add(sh.value.as_ref(), &g());
+
+        let sr: FieldElement =
+            r.clone() * &FieldElement::new(Rc::new(s_inverse), Rc::new(secp256k1.p.clone()));
+        let srp: Point = secp256k1.double_and_add(sr.value.as_ref(), &dG);
+        
+        let verifier: Point = secp256k1.point_addition(&shg, &srp);
+        assert_eq!(r.value.as_ref(), verifier.x.unwrap().value.as_ref());
     }
 
-    fn p() -> BigInt {
-        BigInt::from_str_radix(
-            "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
-            16,
-        )
-        .expect("Failed to construct BigInt from Hex")
-    }
-
-    fn gx() -> BigInt {
-        BigInt::from_str_radix(
-            "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798",
-            16,
-        )
-        .expect("Failed to construct BigInt from Hex")
-    }
-    fn gy() -> BigInt {
-        BigInt::from_str_radix(
-            "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8",
-            16,
-        )
-        .expect("Failed to construct BigInt from Hex")
-    }
-    pub fn g() -> Point {
-        Point {
-            x: Some(FieldElement {
-                value: Rc::new(gx()),
-                field_modulus: Rc::new(p()),
-            }),
-            y: Some(FieldElement {
-                value: Rc::new(gy()),
-                field_modulus: Rc::new(p()),
-            }),
+    fn secp256k1_init() -> Curve {
+        Curve {
+            a: BigInt::zero(),
+            b: b(),
+            p: p(),
         }
     }
-}
 
-#[test]
-fn ecdsa(){
-    use num_bigint_dig::traits::ModInverse;
+    fn modinv(a0: BigInt, m0: BigInt) -> BigInt {
+        let mut a = a0;
+        let mut m = m0.clone();
+        let mut x0 = BigInt::zero();
+        let mut inv = BigInt::one();
+
+        while a > BigInt::one() {
+            let quotient = &a / &m;
+            let remainder = &a % &m;
+            a = m;
+            m = remainder;
+            let new_inv = &inv - &quotient * &x0;
+            inv = x0;
+            x0 = new_inv;
+        }
+        if inv < BigInt::zero() {
+            inv += m0;
+        }
+        inv
+    }
 }

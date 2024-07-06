@@ -66,10 +66,10 @@ impl FieldElement {
             field_modulus: Rc::clone(&self.field_modulus),
         }
     }
-    pub fn modpow(&self, base: BigInt) -> FieldElement {
+    pub fn modpow(&self, exponent: BigInt) -> FieldElement {
         // (base ** exp) % n
         let field_modulus: &BigInt = self.field_modulus.as_ref();
-        let result: BigInt = self.value.modpow(&base, field_modulus);
+        let result: BigInt = self.value.modpow(&exponent, field_modulus);
         FieldElement::new(Rc::new(result), Rc::clone(&self.field_modulus))
     }
 }
