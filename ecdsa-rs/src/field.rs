@@ -1,75 +1,73 @@
 use num_bigint::BigInt;
-use num_traits::{One, Zero};
+use num_traits::Zero;
 use std::ops::{Add, Mul, Rem, Sub};
-use std::rc::Rc;
-
 #[derive(Debug, Clone)]
 pub struct FieldElement {
-    pub value: Rc<BigInt>,
-    pub field_modulus: Rc<BigInt>,
+    pub value: BigInt,
+    pub field_modulus: BigInt,
 }
 
-impl<'a> Rem<&'a FieldElement> for &'a FieldElement {
+impl Rem<&FieldElement> for FieldElement {
     type Output = FieldElement;
-    fn rem(self, other: &'a FieldElement) -> FieldElement {
-        let result: BigInt = self.value.as_ref() % other.value.as_ref();
+    fn rem(self, other: &FieldElement) -> FieldElement {
+        let result: BigInt = &self.value % &other.value;
         if result < BigInt::zero() {
             return FieldElement {
-                value: Rc::new(result + other.value.as_ref()),
-                field_modulus: Rc::clone(&self.field_modulus),
+                value: &result + &other.value,
+                field_modulus: self.field_modulus.clone(),
             };
         };
         FieldElement {
-            value: Rc::new(result),
-            field_modulus: Rc::clone(&self.field_modulus),
+            value: result,
+            field_modulus: self.field_modulus.clone(),
         }
     }
 }
 
-impl<'a> Add<&'a FieldElement> for &'a FieldElement {
+impl Add<&FieldElement> for &FieldElement {
     type Output = FieldElement;
-    fn add(self, other: &'a FieldElement) -> FieldElement {
-        let result: BigInt = self.value.as_ref() + other.value.as_ref();
-        &FieldElement::from_int(&self, Rc::new(result))
-            % &FieldElement::from_int(&self, Rc::clone(&self.field_modulus))
+    fn add(self, other: &FieldElement) -> FieldElement {
+        let result: BigInt = &self.value + &other.value;
+        FieldElement::from_int(&self, result)
+            % &FieldElement::from_int(&self, self.field_modulus.clone())
     }
 }
 
-impl<'a> Sub<&'a FieldElement> for &'a FieldElement {
+impl Sub<&FieldElement> for &FieldElement {
     type Output = FieldElement;
-    fn sub(self, other: &'a FieldElement) -> FieldElement {
-        let result: BigInt = self.value.as_ref() - other.value.as_ref();
-        &FieldElement::from_int(&self, Rc::new(result))
-            % &FieldElement::from_int(&self, Rc::clone(&self.field_modulus))
+    fn sub(self, other: &FieldElement) -> FieldElement {
+        let result: BigInt = &self.value - &other.value;
+        FieldElement::from_int(&self, result)
+            % &FieldElement::from_int(&self, self.field_modulus.clone())
     }
 }
 
-impl<'a> Mul<&'a FieldElement> for FieldElement {
+impl Mul<&FieldElement> for FieldElement {
     type Output = FieldElement;
-    fn mul(self, other: &'a FieldElement) -> FieldElement {
-        let result: BigInt = self.value.as_ref() * other.value.as_ref();
-        &FieldElement::from_int(&self, Rc::new(result))
-            % &FieldElement::from_int(&self, Rc::clone(&self.field_modulus))
+    fn mul(self, other: &FieldElement) -> FieldElement {
+        let result: BigInt = &self.value * &other.value;
+        FieldElement::from_int(&self, result)
+            % &FieldElement::from_int(&self, self.field_modulus.clone())
     }
 }
 
 impl FieldElement {
-    pub fn new(int: Rc<BigInt>, field_modulus: Rc<BigInt>) -> Self {
+    pub fn new(int: BigInt, field_modulus: BigInt) -> Self {
         FieldElement {
             value: int,
             field_modulus,
         }
     }
-    fn from_int(&self, int: Rc<BigInt>) -> Self {
+    fn from_int(&self, int: BigInt) -> Self {
         FieldElement {
             value: int,
-            field_modulus: Rc::clone(&self.field_modulus),
+            field_modulus: self.field_modulus.clone(),
         }
     }
     pub fn modpow(&self, exponent: BigInt) -> FieldElement {
         // (base ** exp) % n
-        let field_modulus: &BigInt = self.field_modulus.as_ref();
-        let result: BigInt = self.value.modpow(&exponent, field_modulus);
-        FieldElement::new(Rc::new(result), Rc::clone(&self.field_modulus))
+        let field_modulus: BigInt = self.field_modulus.clone();
+        let result: BigInt = self.value.modpow(&exponent, &field_modulus);
+        FieldElement::new(result, self.field_modulus.clone())
     }
 }

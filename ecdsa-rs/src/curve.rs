@@ -35,17 +35,14 @@ impl Curve {
             Q.y.clone().unwrap(),
         );
         let mut m: FieldElement = FieldElement {
-            value: Rc::new(BigInt::zero()),
-            field_modulus: Rc::new(self.p.clone()),
+            value: BigInt::zero(),
+            field_modulus: self.p.clone(),
         };
 
         if (x1.value == x2.value) && (y1.value == y2.value) {
-            m = (&(FieldElement::new(Rc::new(BigInt::from(3)), Rc::new(self.p.clone()))
-                * &x1
-                * &x1)
-                + &FieldElement::new(Rc::new(self.a.clone()), Rc::new(self.p.clone())))
-                * (&(FieldElement::new(Rc::new(2.into()), Rc::new(self.p.clone())) * &y1)
-                    .modpow(self.p.clone() - 2));
+            m = (&(FieldElement::new(BigInt::from(3), self.p.clone()) * &x1 * &x1)
+                + &FieldElement::new(self.a.clone(), self.p.clone()))
+                * (&(FieldElement::new(2.into(), self.p.clone()) * &y1).modpow(self.p.clone() - 2));
         } else {
             m = (&y2 - &y1) * &(&x2 - &x1).modpow(self.p.clone() - 2);
         };
@@ -102,27 +99,24 @@ mod tests {
         let d: BigInt = 20.into();
         let dG: Point = secp256k1.double_and_add(&d, &g());
         let mut r: FieldElement = kG.x.clone().unwrap();
-        r.field_modulus = Rc::new(n());
-        r = r * &FieldElement::new(Rc::new(BigInt::one()), Rc::new(n()));
+        r.field_modulus = n();
+        r = r * &FieldElement::new(BigInt::one(), n());
         //let r_inverse: BigInt = modinv(r.value.as_ref().clone(), n());
         //let r_inverse_element: FieldElement = FieldElement::new(Rc::new(r_inverse), Rc::new(n()));
-        let r_element: FieldElement =
-            FieldElement::new(Rc::new(r.value.as_ref().clone()), Rc::new(n()));
+        let r_element: FieldElement = FieldElement::new(r.value.clone(), n());
         //assert_eq!((r_element.clone() * &r_inverse_element).value.as_ref(), &1.into());
         // k must be in range 0 .. n - 1
         let k_inverse: BigInt = modinv(k.clone(), n());
         assert_eq!((k.clone() * k_inverse.clone()) % n(), 1.into());
-        let k_inverse_element: FieldElement =
-            FieldElement::new(Rc::new(k_inverse.clone()), Rc::new(n()));
+        let k_inverse_element: FieldElement = FieldElement::new(k_inverse.clone(), n());
         // h, r, d as field elements
-        let mut h_element: FieldElement = FieldElement::new(Rc::new(BigInt::from(10)), Rc::new(n()));
-
-        let mut d_element: FieldElement = FieldElement::new(Rc::new(d.clone()), Rc::new(n()));
+        let h_element: FieldElement = FieldElement::new(BigInt::from(10), n());
+        let d_element: FieldElement = FieldElement::new(d.clone(), n());
         // compute the signature
         let s: FieldElement = k_inverse_element * &(&h_element + &(r_element.clone() * &d_element));
         // verify the signature
-        let s_inverse: BigInt = modinv(s.value.as_ref().clone(), n());
-        let s_inverse_element: FieldElement = FieldElement::new(Rc::new(s_inverse), Rc::new(n()));
+        let s_inverse: BigInt = modinv(s.value.clone(), n());
+        let s_inverse_element: FieldElement = FieldElement::new(s_inverse, n());
         let sh: FieldElement = h_element.clone() * &s_inverse_element;
         let shg: Point = secp256k1.double_and_add(&sh.value, &g());
 

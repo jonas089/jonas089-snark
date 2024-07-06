@@ -48,12 +48,12 @@ pub fn gy() -> BigInt {
 pub fn g() -> Point {
     Point {
         x: Some(FieldElement {
-            value: Rc::new(gx()),
-            field_modulus: Rc::new(p()),
+            value: gx(),
+            field_modulus: p(),
         }),
         y: Some(FieldElement {
-            value: Rc::new(gy()),
-            field_modulus: Rc::new(p()),
+            value: gy(),
+            field_modulus: p(),
         }),
     }
 }
