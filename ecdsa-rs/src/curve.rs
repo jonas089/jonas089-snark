@@ -129,3 +129,8 @@ fn test_generate_2g_for_secp256k1() {
         }
     }
 }
+
+#[test]
+fn ecdsa(){
+    use num_bigint_dig::traits::ModInverse;
+}

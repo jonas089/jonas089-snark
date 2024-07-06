@@ -1,2 +1,2 @@
 [workspace]
-members=[ "compiler", "executor", "vanilla-ecc", "rust-ecc"]
+members=[ "compiler", "executor", "vanilla-ecc", "rust-ecc", "ecdsa-rs"]
