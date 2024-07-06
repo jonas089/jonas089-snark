@@ -38,18 +38,20 @@ impl Curve {
             value: Rc::new(BigInt::zero()),
             field_modulus: Rc::new(self.p.clone()),
         };
+
         if (x1.value == x2.value) && (y1.value == y2.value) {
             m = (&(FieldElement::new(Rc::new(BigInt::from(3)), Rc::new(self.p.clone()))
                 * &x1
                 * &x1)
                 + &FieldElement::new(Rc::new(self.a.clone()), Rc::new(self.p.clone())))
-                * (&(FieldElement::new(Rc::new(BigInt::from(2)), Rc::new(self.p.clone())) * &y1)
+                * (&(FieldElement::new(Rc::new(2.into()), Rc::new(self.p.clone())) * &y1)
                     .modpow(self.p.clone() - 2));
+
         } else {
-            m = (&y2 - &y1) * &((&x2 - &x1).modpow(self.p.clone() - 2));
+            m = (&y2 - &y1) * &(&x2 - &x1).modpow(self.p.clone() - 2);
         };
         let x3: FieldElement = &(&(m.clone() * &m) - &x1) - &x2;
-        let y3: FieldElement = m * &(&(&x1 - &x3) - &y1);
+        let y3: FieldElement = & (m * &(&x1 - &x3)) - &y1;
         Point {
             x: Some(x3),
             y: Some(y3),
@@ -86,7 +88,7 @@ mod tests {
     fn test_generate_2g_for_secp256k1() {
         let secp256k1: Curve = secp256k1_init();
         let point_g_2: Point = secp256k1.double_and_add(&2.into(), &g());
-        println!("Point 2G: {:?}", &point_g_2);
+        println!("2G: {:?}", &point_g_2);
     }
 
     #[test]
@@ -95,10 +97,8 @@ mod tests {
         use secp256k1::g;
         let secp256k1 = secp256k1_init();
         // 2p + 3 as k
-        let k: BigInt = 3.into();
+        let k: BigInt = 10.into();
         let kG: Point = secp256k1.double_and_add(&k, &g());
-        println!("kG: {:?}", &kG);
-        return;
         let d: BigInt = 20.into();
         let dG: Point = secp256k1.double_and_add(&d, &g());
         let r: FieldElement = kG.x.clone().unwrap();

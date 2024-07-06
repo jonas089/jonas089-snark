@@ -53,7 +53,8 @@ impl Curve {
                 &((&y2 - &y1) % &self.p
                     * ((&x2 - &x1) % &self.p).modpow(&(&self.p - &two), &self.p)),
                 &self.p,
-            )
+            );
+            println!("Gradient: {}", m);
         };
         // evaluate new point on the curve that intersects the tangent line
         let x3: BigInt = modulo(&(&m * &m - &x1 - &x2), &self.p);
@@ -77,6 +78,7 @@ impl Curve {
         for binary_char in binary.chars().skip(1) {
             temp_point = self.point_addition(&temp_point, &temp_point);
             if binary_char == '1' {
+                println!("Temp point: {:?}", &temp_point);
                 temp_point = self.point_addition(&temp_point, &P);
             }
         }
@@ -112,7 +114,7 @@ fn verify_g2_secp256k1() {
         b: secp.b(),
         p: secp.p(),
     };
-    let point_g_2: Point = curve.double_and_add(&BigInt::from(3u8), &secp.g());
+    let point_g_2: Point = curve.double_and_add(&BigInt::from(2u8), &secp.g());
     assert!(curve.is_on_curve(&point_g_2));
     // Todo: make this an assertion and expand on the tests
     println!("Point 2G: {:?}", &point_g_2);
