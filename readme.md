@@ -1,4 +1,7 @@
-⚠️ This is not a production library ⚠️
+>[!WARNING] 
+> This library has not been audited and should not be used in production.
+> Some of the features are unfinished as this is a purely educational/research project.
+
 # Arithmetic proofs from scratch
 
 Jsnark is a passion project of @jonas089 that strives to be a minimum viable SNARK proving system for simple arithmetic circuits, implemented entirely in Rust and from scratch.
